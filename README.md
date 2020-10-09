@@ -1,8 +1,8 @@
 # Introducing "SkySpaces"
 
-https://skyspaces.io [latest code]
+Skapp: https://skyspace.hns.siasky.net  OR  https://siasky.net/hns/skyspace
 
-Access on Skynet: https://siasky.net/hns/skyhub/ [Codebase gets updated on weekly basis]
+Centrally hosted @ https://skyspaces.io
 
 SkySpaces is a place where user can create digital Spaces to store and manage Skynet content. 
 Skynet content search and discovery can be done using categories, custom tags and metadata. Soon you will be able to share Skynet Spaces with your friends and families like picture galleries, video albums..etc.
