@@ -1,0 +1,25 @@
+.Footer	{
+	padding: 20px 20px 25px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #eeeeee;
+	text-align: center;
+}
+
+.FooterText {
+	margin: 0;
+	padding: 0;
+	font-size: .8em;
+	color: #999999;
+}
+
+.FooterText a {
+	color: #777777;
+}
+
+.FooterFontColor {
+	color: #4edf72;
+}
+

@@ -1,0 +1,11 @@
+/index.html
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding,Skynet-File-Metadata"
+  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT, HEAD"
+  Access-Control-Expose-Headers: *
+
+/manifest.json
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Headers: "X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding,Skynet-File-Metadata"
+  Access-Control-Allow-Methods: "POST, GET, OPTIONS, DELETE, PUT, HEAD"
+  Access-Control-Expose-Headers: *
