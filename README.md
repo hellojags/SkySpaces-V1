@@ -36,7 +36,8 @@
 
  **** Target timeline for #1 to #5 public release by mid Dec 2020 . #6 in First week of Feb 2021 ****
 
-If you like the project, please follow(star) it. also connect with me in Sia discord (crypto_rocket) for discussion/collaboration.  
+If you like the project, please follow(star) it. also connect with me in Sia discord crypto_rocket " (SkySpaces.io)
+#8868 " for discussion/collaboration.  
 
 NOTE:
 1. Code is not deployed on HNS domain yet. It will be done on 25th Nov. You can always run this branch locally and test.
