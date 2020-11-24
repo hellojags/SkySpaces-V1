@@ -1,3 +1,10 @@
+SkySpaces [Hackathon Notes]
+
+Below list of features are added (notes will be updated after submitting project, in few minutes)
+1. 
+2.
+3. 
+
 # Introducing "SkySpaces"
 
 https://skyspaces.io [latest code]
