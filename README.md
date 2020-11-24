@@ -1,10 +1,15 @@
 # SkySpaces [Hackathon Notes]
 
 Below list of features are added (notes will be updated after submitting project, in few minutes)
+
 1. SkySpaces landing page - https://siasky.net/AAAJohsrhWTRSogCr0GQJOXbprCTYpEBJj6597OJ8H7mpg
+
 2. File Sharing Between Skynet users using Public Key -  https://siasky.net/AAAY2ye7q2VdG229IbGCyF7GA89_JE0u7FknInydEvdkbQ
+
 3. SkySpaces New UX
+
 Static UI - HTML/CSS demo(Light/Dark) - https://siasky.net/AAAxUx7oMl8ZuL-bKOeljbvqU8SdlfMyUWYUeJy8ErsYzg
+
 WebApp/React Implementation(WIP) - https://siasky.net/_AFCeMD_zrRl0kGYNnksguliCMpTK6OJexaSFvJ1Qf-CSw
 
 
