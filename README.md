@@ -32,7 +32,7 @@
 - design completed
 - implemntation in progress
 
-(6) Somthing intresting cooking in my head for few months (since Skynet announcement). Once #1 to 5 is done, I will have intresting updates.
+(6) Somthing intresting cooking in my head for few months (since Skynet announcement). Once #1 to 5 is done, I will have more updates on it.
 
  **** Target timeline for #1 to #5 public release by mid Dec 2020 . #6 in First week of Feb 2021 ****
 
