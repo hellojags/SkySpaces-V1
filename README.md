@@ -1,3 +1,7 @@
+# For latest update related to Hackathoan refer branch v2.0
+https://github.com/skynethubio/SkySpaces/blob/feature/v2.0/README.md
+
+
 # Introducing "SkySpaces"
 
 Skapp: https://skyspace.hns.siasky.net  OR  https://siasky.net/hns/skyspace
