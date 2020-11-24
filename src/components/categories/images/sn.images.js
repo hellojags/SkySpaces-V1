@@ -16,7 +16,7 @@ export default function SnImages(props) {
       isSelect={props.isSelect}
       arrSelectedAps={props.arrSelectedAps}
       hash={props.hash}
-
+      senderId={props.senderId}
     />
   );
 }

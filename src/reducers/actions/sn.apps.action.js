@@ -24,7 +24,7 @@ export const fetchPublicApps = (args) => {
     type: ACT_TY_FETCH_PUBLIC_APPS,
     payload: args,
   };
-}
+};
 
 export const fetchAppsSuccess = (args) => {
   store.dispatch(setLoaderDisplay(false));
@@ -43,7 +43,6 @@ export const setApps = (args) => {
 
 export const fetchAllSkylinks = (args) => {
   store.dispatch(setLoaderDisplay(false));
-  console.log("fetchAllSkylinks action usersession", args);
   return {
     type: ACT_TY_FETCH_ALL_SKYLINKS,
     payload: args.session,
@@ -59,7 +58,6 @@ export const fetchSkyspaceAppsSuccess = (args) => {
 };
 
 export const fetchSkyspaceApps = (args) => {
-  console.log("fetchSkyspaceApps actio called");
   store.dispatch(setLoaderDisplay(true));
   return {
     type: ACT_TY_FETCH_SKYSPACE_APPS,

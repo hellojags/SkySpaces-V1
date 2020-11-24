@@ -7,11 +7,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Button } from "@material-ui/core";
+import { Button, Chip, TextField } from "@material-ui/core";
 import Slide from "@material-ui/core/Slide";
 import SnCarousalMenu from "../tools/sn.carousal-menu";
 import { ADD_SKYSPACE, getSkyspaceListForCarousalMenu } from "../../sn.constants";
 import SnAddSkyspaceModal from "./sn.add-skyspace.modal";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -95,7 +96,7 @@ class SnAddToSkyspaceModal extends React.Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              <SnCarousalMenu
+              {!this.props.showAddSkyspace && (<SnCarousalMenu
                 selectedItems={this.state.selectedSkyspaces}
                 itemsObj={getSkyspaceListForCarousalMenu(
                   this.props.availableSkyspaces != null
@@ -109,19 +110,25 @@ class SnAddToSkyspaceModal extends React.Component {
                     selectedSkyspaces: evt,
                   });
                 }}
-              />
+              />)}
 
-              {this.props.showAddSkyspace && (<>Create<Tooltip title="Create New Space" arrow>
-                <IconButton
-                  onClick={this.addSkyspace}
-                  justify="flex-start"
-                >
-                  <AddCircleOutlineOutlinedIcon
-                    className="icn-app-bg-clr"
-                    style={{ fontSize: 25 }}
-                  />
-                </IconButton>
-              </Tooltip></>)}
+              {this.props.showAddSkyspace && (<Autocomplete
+                multiple
+                id="tags-filled"
+                filterSelectedOptions
+                options={this.props.availableSkyspaces || []}
+                freeSolo
+                onChange={(evt, value, reason) => this.setState({ selectedSkyspaces: value })}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField {...params} variant="standard" label="Select from Existing Skyspace or Add a New Skyspace" placeholder="Select from Existing Skyspace or Add a New Skyspace" />
+                )}
+              />)}
+
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -146,13 +153,13 @@ class SnAddToSkyspaceModal extends React.Component {
           </DialogActions>
         </Dialog>
         {this.props.showAddSkyspace && (<SnAddSkyspaceModal
-            open={this.state.showAddSkyspace}
-            title={this.state.skyspaceModal.title}
-            skyspaceName={this.state.skyspaceModal.skyspaceName}
-            handleClickOpen={this.handleAddSpaceOpen}
-            handleClose={this.handleAddSpaceClose}
-            type={this.state.skyspaceModal.type}
-          />)}
+          open={this.state.showAddSkyspace}
+          title={this.state.skyspaceModal.title}
+          skyspaceName={this.state.skyspaceModal.skyspaceName}
+          handleClickOpen={this.handleAddSpaceOpen}
+          handleClose={this.handleAddSpaceClose}
+          type={this.state.skyspaceModal.type}
+        />)}
       </>
     );
   }

@@ -16,34 +16,41 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 class SnInfoModal extends React.Component {
-  displayContent = ()=> {
-    switch(this.props.type){
-      case 'public-share': 
+  displayContent = () => {
+    switch (this.props.type) {
+      case 'public-share':
         return (
           <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Skylinks are available at the following public link :
+            <DialogContentText id="alert-dialog-description">
+              Skylinks are available at the following public link :
           </DialogContentText>
-          <DialogContentText>
-            <>
-            {this.props.content}<Tooltip title="Copy Skylink to clipboard" arrow>
-                    <FileCopyOutlinedIcon
-                      onClick={()=>navigator.clipboard.writeText(this.props.content)}
-                      className="cursor-pointer"
-                      style={{ color: APP_BG_COLOR, paddingLeft: 5 }}
-                    />
-                  </Tooltip>
-                  </>
-          </DialogContentText>
-        </DialogContent>
+            <DialogContentText>
+              <>
+                {this.props.content}<Tooltip title="Copy Skylink to clipboard" arrow>
+                  <FileCopyOutlinedIcon
+                    onClick={() => navigator.clipboard.writeText(this.props.content)}
+                    className="cursor-pointer"
+                    style={{ color: APP_BG_COLOR, paddingLeft: 5 }}
+                  />
+                </Tooltip>
+              </>
+            </DialogContentText>
+          </DialogContent>
         );
       default:
         return (
           <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {this.props.content}
-          </DialogContentText>
-        </DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {this.props.content}{this.props.showClipboardCopy && (
+                <Tooltip title={this.props.clipboardCopyTooltip || "Copy Skylink to clipboard"} arrow>
+                  <FileCopyOutlinedIcon
+                    onClick={() => navigator.clipboard.writeText(this.props.content)}
+                    className="cursor-pointer"
+                    style={{ color: APP_BG_COLOR, paddingLeft: 5 }}
+                  />
+                </Tooltip>)}
+            </DialogContentText>
+          </DialogContent>
         );
     }
   }

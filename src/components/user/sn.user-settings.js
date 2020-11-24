@@ -36,8 +36,8 @@ import ViewColumn from "@material-ui/icons/ViewColumn";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { SkynetClient, parseSkylink } from "skynet-js";
-import {uploadData} from "../../skyhub/sn.api.skyhub"
-
+import { uploadData } from "../../skyhub/sn.api.skyhub"
+import styles from "./sn.user-settings.styles";
 import {
   Select,
   InputLabel,
@@ -98,14 +98,7 @@ const tableIcons = {
   )),
 };
 
-const useStyles = (theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-});
+const useStyles = styles;
 
 const MuiTheme = createMuiTheme({
   palette: {
@@ -166,7 +159,7 @@ class SnUserSettings extends React.Component {
                 <>
                   {/* {cliTruncate(rowData.skylink, 20, { position: "middle" })} */}
                   {rowData.skylink}
-                  <Tooltip title="Copy Skylink to clipboard" arrow onClick={()=>this.copyToClipboard(rowData.skylink)}>
+                  <Tooltip title="Copy Skylink to clipboard" arrow onClick={() => this.copyToClipboard(rowData.skylink)}>
                     <FileCopyOutlinedIcon
                       className="cursor-pointer"
                       style={{ color: APP_BG_COLOR }}
@@ -183,7 +176,7 @@ class SnUserSettings extends React.Component {
   }
   // Column is coming from state, Data is coming from Props.snPortalsList (in store)
   closeSaveAlertMsg = () => {
-    this.setState({ 
+    this.setState({
       saveAlertMsg: false,
       alertMessage: null
     });
@@ -238,10 +231,10 @@ class SnUserSettings extends React.Component {
   componentDidMount() {
     this.props.setLoaderDisplay(true);
     this.loadUserSetting()
-    .then(()=>this.props.setLoaderDisplay(false));
+      .then(() => this.props.setLoaderDisplay(false));
   }
 
-  loadUserSetting = async()=> {
+  loadUserSetting = async () => {
     const userSettingJsonObj = await bsGetUserSetting(this.props.userSession);
     this.props.fetchPortalsListAction();
     this.setState({
@@ -261,15 +254,15 @@ class SnUserSettings extends React.Component {
     // }
     const portal = this.state.userSetting?.setting?.portal || DEFAULT_PORTAL;
     const backupFile = await bsGetBackupObjFile(this.props.userSession, portal);
-    const uploadedContent = await new SkynetClient(portal).upload(backupFile);
+    const uploadedContent = await new SkynetClient(portal).uploadFile(backupFile);
     console.log("before HNS");
-    const uploadRes = await uploadData("home.skapp",backupFile,false,{});
+    const uploadRes = await uploadData("home.skapp", backupFile, false, {});
     console.log("After HNS");
     const timeStr = new Date().toString();
     const backupObj = {
       timestamp: timeStr,
       name: "Backup_" + moment(timeStr).format("MM/DD/YYYY h:mm a"),
-      skylink: uploadedContent.skylink,
+      skylink: parseSkylink(uploadedContent),
     };
     const userSetting = this.state.userSetting;
     const backupList = userSetting.setting.backupList || [];
@@ -323,14 +316,14 @@ class SnUserSettings extends React.Component {
     );
   };
 
-  restoreBackup = async (rowData)=>{
+  restoreBackup = async (rowData) => {
     this.props.setLoaderDisplay(true);
     const skylink = rowData.skylink;
     const fileUrl = skylinkToUrl(skylink, this.state.userSetting);
     const backupObj = await retrieveBackupObj(this.props.userSession, fileUrl);
     try {
       await restoreBackup(this.props.userSession, backupObj);
-    } catch(err){
+    } catch (err) {
       console.error("backup restored with error", err);
     }
     this.props.fetchSkyspaceList();
@@ -343,7 +336,7 @@ class SnUserSettings extends React.Component {
     })
   }
 
-  confirmRestoreBackup = (rowData)=>{
+  confirmRestoreBackup = (rowData) => {
     this.setState({
       backupRowData: rowData,
       showConfModal: true
@@ -355,8 +348,243 @@ class SnUserSettings extends React.Component {
     let { userSetting, columns } = this.state;
     return (
       <MuiThemeProvider theme={MuiTheme}>
-        <CssBaseline />
-        <div className="container-fluid register-container">
+        <main className={classes.content}>
+          <Grid container spacing={3} className={classes.most_main_grid_settings}>
+            <Grid item xs={12} className={classes.main_grid_settings}>
+              <Paper className={`${classes.paper} ${classes.MaintabsPaper_settings}`}>
+                <Paper className={classes.tabsPaper_settings}>
+                  <Grid container spacing={3} style={{ paddingBottom: "10px" }}>
+                    <Grid item xs={12}>
+                      <Typography className={classes.settings_title}>
+                        Settings
+                    </Typography>
+                    </Grid>
+                    <Grid item xs={10} className="select-grid">
+                      <FormControl className={classes.formControl}>
+                        <InputLabel id="portal-label">
+                          Select a default Skynet portal
+                </InputLabel>
+                        {userSetting != null && (
+                          <Select
+                            labelId="portal-label"
+                            id="portalList"
+                            fullWidth
+                            name="portalList"
+                            value={userSetting.setting.portal}
+                            onChange={this.handlePortalChange}
+                          >
+                            {snPortalsList &&
+                              snPortalsList.portals.map((obj, index) => (
+                                <MenuItem key={index} value={obj.url}>
+                                  {obj.url}
+                                </MenuItem>
+                              ))}
+                          </Select>
+                        )}
+                        <FormHelperText></FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={2} sm={2}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="btn-register-pg float-center"
+                        type="button"
+                        onClick={this.handleSave}
+                        startIcon={<SaveIcon />}
+                      >
+                        Save
+              </Button>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <MaterialTable
+                        icons={tableIcons}
+                        title="Skynet Portals"
+                        columns={columns}
+                        data={(this.props.snPortalsList
+                          ? this.props.snPortalsList.portals
+                          : []
+                        ).filter((obj) => obj != null)}
+                        options={{
+                          actionsColumnIndex: -1,
+                        }}
+                        editable={{
+                          onRowAdd: (newData) => {
+                            console.log("row added");
+                            return new Promise((resolve, reject) => {
+                              setTimeout(() => {
+                                this.updatePortalData([
+                                  ...snPortalsList.portals,
+                                  newData,
+                                ]);
+                                resolve();
+                              }, 1000);
+                            })
+                          },
+                          onRowUpdate: (newData, oldData) =>
+                            new Promise((resolve, reject) => {
+                              setTimeout(() => {
+                                const dataUpdate = [...snPortalsList.portals];
+                                const index = oldData.tableData.id;
+                                dataUpdate[index] = newData;
+                                this.updatePortalData([...dataUpdate]);
+                                if (oldData.url === userSetting.setting["portal"]) {
+                                  this.handlePortalURLChange(newData.url);
+                                }
+                                resolve();
+                              }, 1000);
+                            }),
+                          onRowDelete: (oldData) =>
+                            new Promise((resolve, reject) => {
+                              setTimeout(() => {
+                                if (oldData.url === userSetting.setting["portal"]) {
+                                  alert(
+                                    oldData.url +
+                                    " is default skynet portal for SkySpaces. Please change default portal and try. "
+                                  );
+                                } else {
+                                  const dataDelete = [...snPortalsList.portals];
+                                  const index = oldData.tableData.id;
+                                  dataDelete.splice(index, 1);
+                                  this.updatePortalData([...dataDelete]);
+                                }
+                                resolve();
+                              }, 1000);
+                            }),
+                        }}
+                      />
+                    </Grid>
+
+
+                    {/*  <Grid item xs={12} sm={10}>
+              <Button
+                variant="contained"
+                color="primary"
+                className="btn-register-pg float-center"
+                type="button"
+                onClick={this.createBackup}
+                startIcon={<SettingsBackupRestoreOutlinedIcon />}
+              >
+                Create Backup
+              </Button>
+              {userSetting?.setting?.backupList && (
+                <MaterialTable
+                  icons={tableIcons}
+                  title="Backups"
+                  columns={this.state.backup.columns}
+                  data={userSetting.setting.backupList.filter(
+                    (obj) => obj != null
+                  )}
+                  actions={[
+                    {
+                      icon: ()=><RestoreIcon />,
+                      tooltip: 'Restore Backup',
+                      onClick: (evt, rowData)=> this.confirmRestoreBackup(rowData)
+                    }
+                  ]}
+                  editable={{
+                    onRowUpdate: (newData, oldData) => {
+                      const dataUpdate = [...userSetting.setting.backupList];
+                      const index = oldData.tableData.id;
+                      dataUpdate[index] = newData;
+                      userSetting.setting.backupList = dataUpdate;
+                      this.setState({ userSetting });
+                      return this.handleSave({ hideAlert: true });
+                    },
+                  }}
+                  options={{
+                    actionsColumnIndex: -1,
+                  }}
+                />
+              )}
+            </Grid>
+             */}
+                    {/*userSetting && (
+              <Grid item xs={12} sm={10}>
+                <Paper elevation={2}>
+                  <Grid item xs={12}>
+                    <Typography>
+                      HNS Configuration (** Work In Progress **)
+                    </Typography> 
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className="btn-register-pg float-center"
+                        type="button"
+                        onClick={this.handleHnsSave}
+                        //disabled={!this.validateHnsConfig()}
+                        disabled={true}
+                        startIcon={<SaveIcon />}
+                      >
+                        Save
+                      </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="domain"
+                      name="domain"
+                      label={"HNS Domain"}
+                      value={userSetting?.setting?.hnsconfig?.domain}
+                      fullWidth
+                      autoComplete="off"
+                      onChange={this.handleHnsChange}
+                      helperText={"HNS domain name is a mandatory field."}
+                      disabled="true"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="apikey"
+                      name="apikey"
+                      label={"HNS Apikey"}
+                      fullWidth
+                      value={userSetting?.setting?.hnsconfig?.apikey}
+                      autoComplete="off"
+                      onChange={this.handleHnsChange}
+                      helperText={"HNS apikey is a mandatory field."}
+                      disabled="true"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="apisecret"
+                      name="apisecret"
+                      label={"HNS Secret"}
+                      fullWidth
+                      value={userSetting?.setting?.hnsconfig?.apisecret}
+                      autoComplete="off"
+                      onChange={this.handleHnsChange}
+                      helperText={"HNS Secret is a mandatory field."}
+                      disabled="true"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      id="hnsgateway"
+                      name="hnsgateway"
+                      label={"HNS Gateway"}
+                      fullWidth
+                      autoComplete="off"
+                      value={userSetting?.setting?.hnsconfig?.hnsgateway}
+                      onChange={this.handleHnsChange}
+                      helperText={"HNS Gateway is a mandatory field."}
+                      disabled="true"
+                    />
+                  </Grid>
+                </Paper>
+              </Grid>
+             )*/}
+                  </Grid>
+                </Paper>
+              </Paper>
+            </Grid>
+          </Grid>
+        </main>
+
+
+
+
+        {/* <div className="container-fluid register-container">
           <Grid container spacing={1}>
             <Grid item xs={10} sm={10}>
               <div className="d-sm-flex align-items-center justify-content-between settings-header">
@@ -575,15 +803,15 @@ class SnUserSettings extends React.Component {
               </Grid>
             )}
           </Grid>
-        </div>
+        </div> */}
         <Snackbar
           open={this.state.saveAlertMsg}
           autoHideDuration={4000}
           onClose={this.closeSaveAlertMsg}
         >
           <Alert onClose={this.closeSaveAlertMsg} severity="success">
-            {this.state.alertMessage!=null ? this.state.alertMessage : 
-            "Default Skynet Protal is successfully changed to " + (userSetting && userSetting.setting["portal"])
+            {this.state.alertMessage != null ? this.state.alertMessage :
+              "Default Skynet Protal is successfully changed to " + (userSetting && userSetting.setting["portal"])
             }
           </Alert>
         </Snackbar>

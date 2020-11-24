@@ -1,0 +1,65 @@
+/* loader css start */
+.loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 100px;
+    height: 100px;
+    margin: -8px 0 0 -75px;
+    border: 6px solid #ffbb00;
+    border-radius: 50%;
+    border-top: 6px solid #38b7ff;
+    border-right: 6px solid #1ed760;
+    border-bottom: 6px solid #ff3c3c;
+    width: 70px;
+    height: 70px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* loader css end */
+  /* Second loader START*/
+  .sn-loader-overlay {
+    background: #ffffff;
+    color: #666666;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 5000;
+    top: 0;
+    left: 0;
+    float: left;
+    text-align: center;
+    padding-top: 25%;
+    opacity: .60;
+  }
+  
+  .sn-loader {
+      margin: 0 auto;
+      height: 64px;
+      width: 64px;
+      animation: rotate 0.8s infinite linear;
+      border: 5px solid firebrick;
+      border-right-color: transparent;
+      border-radius: 50%;
+  }
+  @keyframes rotate {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+  }
+  /* Second loader END*/

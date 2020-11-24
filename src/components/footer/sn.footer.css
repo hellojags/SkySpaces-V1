@@ -1,0 +1,45 @@
+.span-donate {
+    color: #1dd65f;
+    font-weight: 600;
+    border-right: 2px dotted lightgray;
+    padding-right: 10px;
+    font-size: 14px;
+  }
+  .span-privacy {
+    color: #1dd65f;
+    font-weight: 600;
+    border-right: 2px dotted lightgray;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  .span-terms {
+    color: #1dd65f;
+    font-weight: 600;
+    border-right: 2px dotted lightgray;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  .span-twitter {
+    color: #1dd65f;
+    font-weight: 600;
+    padding-right: 4px;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  .c4-row-div {
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+  .colm2-main-div {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+  }
+  .image-logo_col-footer {
+    display: flex;
+    justify-content: center;
+  }
+  

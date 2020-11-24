@@ -12,12 +12,16 @@ import { DEFAULT_PORTAL } from "../sn.constants";
 import { UserSession, AppConfig } from "blockstack";
 
 export const GAIA_HUB_URL = "https://gaia.blockstack.org/hub";
+export const PROFILE_PATH = "skhub/profile.json";// this will be added by "Master Key/Seed" from ID Page. each master key will derive 1 or more child seeds (Pub/Private key).
+export const FOLLOWING_PATH = "skhub/following.json"; // will contain array of public key[array of Users]. this key will be set by app specific pub key/User 
+export const FOLLOWER_PATH = "skhub/follower.json";// will contain array of public key[array of Users]. this key will be set by app specific pub key/User
 export const PUBLIC_KEY_PATH = "skhub/key/publicKey.json";
 export const SKYLINK_PATH = "skhub/skylink/data/";
 export const BACKUP_FILEPATH = "skhub/backup/backup.json";
 export const SKYLINK_IDX_FILEPATH = "skhub/skylink/skylinkIdx.json";
 export const SKYSPACE_PATH = "skhub/skyspaces/";
 export const SHARED_PATH_PREFIX = "skhub/shared/";
+export const SHARED_BY_USER_FILEPATH = "skhub/shared/sharedByUser.json";
 export const SHARED_WITH_FILE_PATH = "skhub/shared/sharedWithUser.json ";
 export const SKYSPACE_IDX_FILEPATH = "skhub/skyspaces/skyspaceIdx.json";
 export const HISTORY_FILEPATH = "skhub/history/history.json";

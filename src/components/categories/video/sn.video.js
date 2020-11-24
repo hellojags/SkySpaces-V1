@@ -16,6 +16,7 @@ export default function SnVideo(props) {
       isSelect={props.isSelect}
       arrSelectedAps={props.arrSelectedAps}
       hash={props.hash}
+      senderId={props.senderId}
     />
   );
 }

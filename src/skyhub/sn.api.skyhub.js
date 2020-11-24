@@ -42,7 +42,7 @@ export const uploadData = async (domain,file,isDir,{}) =>
       }
     const url = options.dnsserviceapi+path;
     const dns_records ='{"records":[{ "type": "TXT", "host": "'+subdomain+'", "value": "TEST", "ttl": 60 }],"deleteRecords":[]}';
-    const uploadedContent = await new SkynetClient(portal).upload(file);
+    const uploadedContent = await new SkynetClient(portal).uploadFile(file);
     console.log("uploadedContent"+uploadedContent.json);
     //get skylink and put in JSON
     const nb_options = {

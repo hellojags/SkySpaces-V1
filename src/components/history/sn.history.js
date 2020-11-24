@@ -39,6 +39,8 @@ import {
 import { bsSetHistory, bsClearHistory } from "../../blockstack/blockstack-api";
 import { authenticate } from "@blockstack/connect";
 import { ITEMS_PER_PAGE } from "../../sn.constants";
+import styles from "./sn.history.styles";
+import { Paper, Typography } from "@material-ui/core";
 
 const tableIcons = {
   Add: React.forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -60,14 +62,7 @@ const tableIcons = {
   ViewColumn: React.forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-const useStyles = (theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-});
+const useStyles = styles;
 
 const doSignIn = () => {
   const authOptions = {
@@ -125,7 +120,7 @@ class SnHistory extends React.Component {
         { title: 'Activity Type', field: 'action' },
         {
           title: 'Spaces', field: 'skyspaces',
-          render: (rowData) => rowData.skyspaces ? this.loadAvailableAction(rowData): "N/A"
+          render: (rowData) => rowData.skyspaces ? this.loadAvailableAction(rowData) : "N/A"
         }
       ],
     };
@@ -210,43 +205,75 @@ class SnHistory extends React.Component {
 
   render() {
     let { columns } = this.state;
+    const { classes } = this.props;
     if (this.state.saveToSkyspace) {
       return <Redirect to="/register" />;
     }
     return (
-      <div className="container-fluid register-container">
-        <Grid container spacing={1}>
-          <Grid item xs={12} sm={12}>
-            <MaterialTable
-              icons={tableIcons}
-              title="Activity History"
-              columns={columns}
-              data={this.props.history}
-              options={{
-                selection: true,
-                sorting: true,
-                actionsColumnIndex: -1
-              }}
-              actions={[
-                {
-                  tooltip: 'Remove Selected Activity History',
-                  icon: tableIcons.Delete,
-                  onClick: (event, rows) => { this.deleteSelectedHistory(rows) }
-                }
-              ]}
-            />
+      <main className={classes.content}>
+        <Grid container spacing={3} className={classes.most_main_grid_actvHstry}>
+          <Grid item xs={12} className={classes.main_grid_actvHstry}>
+            <Paper
+              className={`${classes.paper} ${classes.MaintabsPaper_actvHstry}`}
+            >
+              <Paper className={classes.tabsPaper_actvHstry}>
+                <Grid container spacing={3} style={{ paddingBottom: "10px" }}>
+                  <Grid item xs={12}>
+                    <div
+                      style={{
+                        paddingTop: "40px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {/* <Typography className={classes.actvHstry_title}>
+                        Activity History
+                      </Typography> */}
+
+                    </div>
+                    <div
+                      style={{
+                        boxShadow: "0 0 10px rgba(0,0,0,.4)",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <MaterialTable
+                        icons={tableIcons}
+                        title="Activity History"
+                        columns={columns}
+                        data={this.props.history}
+                        options={{
+                          selection: true,
+                          sorting: true,
+                          actionsColumnIndex: -1
+                        }}
+                        actions={[
+                          {
+                            tooltip: 'Remove Selected Activity History',
+                            icon: tableIcons.Delete,
+                            onClick: (event, rows) => { this.deleteSelectedHistory(rows) }
+                          }
+                        ]}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Paper>
           </Grid>
         </Grid>
-        <Snackbar
-          open={this.state.openCopySuccess}
-          autoHideDuration={4000}
-          onClose={this.closeCopySucess}
-        >
-          <Alert onClose={this.closeCopySucess} severity="success">
-            Skylink successfully copied to clipboard!
+        <div className="container-fluid register-container">
+          <Snackbar
+            open={this.state.openCopySuccess}
+            autoHideDuration={4000}
+            onClose={this.closeCopySucess}
+          >
+            <Alert onClose={this.closeCopySucess} severity="success">
+              Skylink successfully copied to clipboard!
           </Alert>
-        </Snackbar>
-      </div>
+          </Snackbar>
+        </div>
+      </main>
     );
   }
 }

@@ -1,10 +1,18 @@
 import React from "react";
 import { getCompatibleTags, DOWNLOAD } from "../../sn.constants";
+import useStyles from "./sn.app-card.styles";
 import { CATEGORY_OBJ } from "../../sn.category-constants";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import Typography from "@material-ui/core/Typography";
+import ImageIcon from "@material-ui/icons/Image";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import Paper from "@material-ui/core/Paper";
+import HeadsetIcon from "@material-ui/icons/Headset";
+import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import Chip from "@material-ui/core/Chip";
@@ -35,33 +43,6 @@ import { launchSkyLink, readableBytes } from "../../sn.util";
 import Tooltip from "@material-ui/core/Tooltip";
 import { APP_BG_COLOR } from "../../sn.constants";
 
-const useStyles = (theme) => ({
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    "& > *": {
-      margin: theme.spacing(0.5),
-    },
-  },
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-  },
-  avatar: {
-    backgroundColor: green[500],
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "0px",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-});
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -93,9 +74,9 @@ class SnAppCard extends React.Component {
     this.trimDescription = this.trimDescription.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot){
+  componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.isSelect !== this.props.isSelect) {
-      this.setState({isSelected: false});
+      this.setState({ isSelected: false });
     }
   }
 
@@ -133,7 +114,7 @@ class SnAppCard extends React.Component {
         this.props.userSession,
         skhubId,
         this.props.app.skyspaceList
-        );
+      );
     }
     this.props.fetchSkyspaceAppCount();
     this.props.setLoaderDisplay(false);
@@ -215,13 +196,13 @@ class SnAppCard extends React.Component {
     this.setState({ openCopySuccess: false });
   };
 
-  renderOtherSpaces = ()=> {
+  renderOtherSpaces = () => {
     if (this.props.allSpacesObj) {
       const otherSpaces = Object.keys(this.props.allSpacesObj)
-      .filter(space=>this.props.allSpacesObj.hasOwnProperty(space) 
-      && this.props.skyspace!==space
-      && this.props.allSpacesObj[space]?.indexOf(this.props.app.skhubId)>-1 );
-      if (otherSpaces && otherSpaces.length>0) {
+        .filter(space => this.props.allSpacesObj.hasOwnProperty(space)
+          && this.props.skyspace !== space
+          && this.props.allSpacesObj[space]?.indexOf(this.props.app.skhubId) > -1);
+      if (otherSpaces && otherSpaces.length > 0) {
         return (
           <div>
             <span className="pr-2 pl-2">
@@ -246,7 +227,128 @@ class SnAppCard extends React.Component {
   }
 
   render() {
-    const { app } = this.props;
+    const { app, classes } = this.props;
+
+
+    return (
+      <>
+        <Grid item xs={12} style={{ marginTop: 10 }}>
+          <Paper className={classes.paperStyling}>
+            <Grid container spacing={3} style={{ width: "100%", margin: "auto" }}>
+              <Grid item xs={12}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div>
+                    {app.type != null &&
+                      getCompatibleTags(app.type).map((category, idx) => {
+                        return CATEGORY_OBJ[category] != null ? (
+                          CATEGORY_OBJ[category].getLogo(classes.spaceIcons)
+                        ) : (<></>)
+                      })
+                    }
+                  </div>
+                  <div style={{ paddingLeft: 20, cursor: "pointer" }}
+                    onClick={() => {
+                      this.download(app);
+                    }}>
+                    <Typography variant="span" className={classes.spaceName}>
+                      {cliTruncate(app.name, 100, { position: "middle" })}
+                    </Typography>
+                  </div>
+                  <div style={{ paddingLeft: 30 }}>
+                    <Typography variant="span" className={classes.createAtTime}>
+                      {app.contentType}
+                    </Typography>
+                  </div>
+                  <div style={{ paddingLeft: 30 }}>
+                    <Typography variant="span" className={classes.createAtTime}>
+                      {readableBytes(app.contentLength)}
+                    </Typography>
+                  </div>
+                  <div style={{ paddingLeft: 30 }}>
+                    <Typography variant="span" className={classes.createAtTime}>
+                      {moment(app.createTS).format(
+                        "MM/DD/YYYY h:mm:ss a"
+                      )}
+                    </Typography>
+                  </div>
+                  {this.props.isSelect && (
+                            <div style={{marginLeft: "auto"}}>
+                              {this.props.arrSelectedAps.indexOf(app) === -1 && (
+                                <RadioButtonUncheckedIcon className="selection-radio"
+                                  onClick={() => this.props.onSelection(app)} />
+                              )}
+                              {this.props.arrSelectedAps.indexOf(app) > -1 && (
+                                <RadioButtonCheckedIcon className="selection-radio"
+                                  onClick={() => this.props.onSelection(app, true)} />
+                              )}
+                            </div>
+                          )}
+                </div>
+                <div style={{ paddingLeft: 62 }} className={classes.createAtTime}>
+                  {app.skylink} <Tooltip title="Copy Skylink to clipboard" arrow>
+                    <FileCopyOutlinedIcon
+                      onClick={this.copyToClipboard}
+                      className="cursor-pointer"
+                      style={{ color: APP_BG_COLOR, paddingLeft: 5 }}
+                    />
+                  </Tooltip>
+                </div>
+              </Grid>
+              <Grid item xs={12} style={{ paddingTop: 0 }}>
+                <div style={{ paddingLeft: 62 }}>
+                  {this.trimDescription(app.description, 200)}
+                  {this.renderOtherSpaces()}
+                </div>
+              </Grid>
+              <Grid item xs={12} style={{ paddingTop: 0, paddingBottom: 0 }}>
+                <SnAppCardActionBtnGrp
+                  app={app}
+                  hash={this.props.hash}
+                  hideDelete={this.props.senderId != null}
+                  hideAdd={this.props.senderId != null}
+                  onAdd={() => this.handleSkyspaceAdd(app)}
+                  onEdit={() => this.openSkyApp(app)}
+                  onLaunch={() => this.launchSkyLink(app.skylink)}
+                  onDelete={() => this.removeFromSkyspace()}
+                  onDownload={() => this.download(app)}
+                />
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        <SnAddToSkyspaceModal
+          userSession={this.props.userSession}
+          open={this.state.showAddToSkyspace}
+          availableSkyspaces={this.state.availableSkyspaces}
+          onClose={() => this.setState({ showAddToSkyspace: false })}
+          onSave={(skyspaceList) =>
+            this.saveAddToSkyspaceChanges(app, skyspaceList)
+          }
+        />
+        <SnInfoModal
+          open={this.state.snInfoModal.open}
+          onClose={this.state.snInfoModal.onClose}
+          title={this.state.snInfoModal.title}
+          content={this.state.snInfoModal.description}
+        />
+
+        <Snackbar
+          open={this.state.openCopySuccess}
+          autoHideDuration={3000}
+          onClose={this.closeCopySucess}
+        >
+          <Alert onClose={this.closeCopySucess} severity="success">
+            Skylink successfully copied to clipboard!
+          </Alert>
+        </Snackbar>
+      </>
+    );
 
     return (
       <>
@@ -284,29 +386,29 @@ class SnAppCard extends React.Component {
                           </span>
                           {this.props.isSelect && (
                             <>
-                            {this.props.arrSelectedAps.indexOf(app)===-1 && (
-                              <RadioButtonUncheckedIcon className="selection-radio" 
-                              onClick={()=>this.props.onSelection(app)}/>
+                              {this.props.arrSelectedAps.indexOf(app) === -1 && (
+                                <RadioButtonUncheckedIcon className="selection-radio"
+                                  onClick={() => this.props.onSelection(app)} />
                               )}
-                            {this.props.arrSelectedAps.indexOf(app)>-1 && (
-                            <RadioButtonCheckedIcon className="selection-radio" 
-                            onClick={()=>this.props.onSelection(app, true)}/>
-                            )}
+                              {this.props.arrSelectedAps.indexOf(app) > -1 && (
+                                <RadioButtonCheckedIcon className="selection-radio"
+                                  onClick={() => this.props.onSelection(app, true)} />
+                              )}
                             </>
                           )}
                         </div>
                       ) : (
-                        <Link
-                          variant="inherit"
-                          className="font-weight-bold cursor-pointer h5"
-                          color="black"
-                          onClick={() => {
-                            this.download(app);
-                          }}
-                        >
-                          {cliTruncate(app.name, 100, { position: "middle" })}
-                        </Link>
-                      );
+                          <Link
+                            variant="inherit"
+                            className="font-weight-bold cursor-pointer h5"
+                            color="black"
+                            onClick={() => {
+                              this.download(app);
+                            }}
+                          >
+                            {cliTruncate(app.name, 100, { position: "middle" })}
+                          </Link>
+                        );
                     })}
                 </div>
               }
@@ -336,7 +438,8 @@ class SnAppCard extends React.Component {
               <SnAppCardActionBtnGrp
                 app={app}
                 hash={this.props.hash}
-                hideDelete={false}
+                hideDelete={this.props.senderId != null}
+                hideAdd={this.props.senderId != null}
                 onAdd={() => this.handleSkyspaceAdd(app)}
                 onEdit={() => this.openSkyApp(app)}
                 onLaunch={() => this.launchSkyLink(app.skylink)}

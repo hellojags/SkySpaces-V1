@@ -1,4 +1,4 @@
-import { DEFAULT_PORTAL } from "./sn.constants";
+import { DEFAULT_PORTAL, ID_PROVIDER_BLOCKSTACK, ID_PROVIDER_SKYDB } from "./sn.constants";
 import imageCompression from "browser-image-compression";
 import { getCategoryObjWithoutAll } from "./sn.category-constants";
 
@@ -126,3 +126,11 @@ export const setTypeFromFile = (fileType, app)=>{
 
 export const getAllPublicApps = (appsFromHash, inMemoryAddedApps, inMemoryDeletedApps) => 
   subtractSkapps( [...new Set([...inMemoryAddedApps, ...appsFromHash])] , inMemoryDeletedApps);
+
+export const getUserSessionType = (userSession) => {
+  let idType = ID_PROVIDER_BLOCKSTACK;
+  if (userSession.skydbseed) {
+    idType = ID_PROVIDER_SKYDB; 
+  }
+  return idType;
+}

@@ -4,6 +4,19 @@ import { ITEMS_PER_PAGE } from "../../../sn.constants";
 import { launchSkyLink } from "../../../sn.util";
 import SnAppCardActionBtnGrp from "../../cards/sn.app-card-action-btn-grp";
 import { makeStyles } from "@material-ui/core/styles";
+import CameraAltOutlinedIcon from "@material-ui/icons/CameraAltOutlined";
+import VideocamOutlinedIcon from "@material-ui/icons/VideocamOutlined";
+import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
+import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import ShareOutlinedIcon from "@material-ui/icons/ShareOutlined";
+import GamesOutlinedIcon from "@material-ui/icons/GamesOutlined";
+import PlaylistAddOutlinedIcon from "@material-ui/icons/PlaylistAddOutlined";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 import { setLoaderDisplay } from "../../../reducers/actions/sn.loader.action";
 import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
@@ -21,7 +34,7 @@ import SnAddToSkyspaceModal from "../../modals/sn.add-to-skyspace.modal";
 import { skylinkToUrl } from "../../../sn.util";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import {  DOWNLOAD } from "../../../sn.constants";
+import { DOWNLOAD } from "../../../sn.constants";
 import {
   bsGetSkyspaceNamesforSkhubId,
   bsAddSkylinkFromSkyspaceList,
@@ -30,33 +43,9 @@ import {
   bsAddToHistory
 } from "../../../blockstack/blockstack-api";
 import { useSelector, useDispatch } from "react-redux";
+import useStyles from "./sn.images.styles";
+import { Button, Paper } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 0,
-    // paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  cardHeader: {
-    paddingTop: 5,
-    paddingBottom: 5
-  }
-}));
 
 export default function SnImagesDefault(props) {
   const classes = useStyles();
@@ -67,11 +56,32 @@ export default function SnImagesDefault(props) {
   const [showAddToSkyspace, setShowAddToSkyspace] = useState(false);
   const [availableSkyspaces, setAvailableSkyspaces] = useState([]);
   const [currentApp, setCurrentApp] = useState();
+  const [imageStatus, setImageStatus] = React.useState(false);
+  const [selectedImagesLength, setSelectedImagesLength] = React.useState([]);
 
   const carousalEle = useRef(null);
 
   const stUserSession = useSelector((state) => state.userSession);
   const stSnSkyspaceList = useSelector((state) => state.snSkyspaceList);
+
+  const handleClick = (e) => {
+    let arr = [...selectedImagesLength, e.target.name];
+    setImageStatus(!imageStatus);
+    props.handleUploadSection(!imageStatus);
+
+    if (imageStatus == false) {
+      setSelectedImagesLength(arr);
+      console.log("arr", arr);
+    } else {
+      let filteredArr = selectedImagesLength.filter((item) => {
+        // console.log("item", selectedImagesLength);
+        return item != e.target.name;
+      });
+      setSelectedImagesLength(filteredArr);
+
+      console.log("filter", filteredArr);
+    }
+  };
 
   const download = (app) => {
     dispatch(setLoaderDisplay(true));
@@ -174,6 +184,246 @@ export default function SnImagesDefault(props) {
     }
   };
 
+  const imageClick = (app, idx) => {
+    if (props.isSelect) {
+      if (props.arrSelectedAps.indexOf(app) === -1) {
+        props.onSelection(app);
+      } else {
+        props.onSelection(app, true);
+      }
+    } else {
+      launchCarousal(app, idx);
+    }
+  };
+
+  return (
+    <>
+      <div className={clsx({
+        "d-none": !showCarousal,
+      })}
+      >
+        <ImageGallery
+          ref={carousalEle}
+          items={getCarousalImages()}
+          startIndex={carousalStartIndex}
+          onScreenChange={(evt) => !evt && setShowCarousal(false)}
+        />
+      </div>
+      <Grid
+        container
+        spacing={3}
+        className={` most_main_grid_gallery ${classes.most_main_grid_gallery}`}
+      >
+        <Grid
+          item
+          xs={12}
+          className={classes.main_grid_gallery}
+          style={{ paddingTop: "0px" }}
+        >
+          <Paper className={`${classes.paper} ${classes.MaintabsPaper_gallery}`}>
+            <Paper className={classes.tabsPaper_gallery}>
+              {/* title bar when an image is selected */}
+              {imageStatus ? (
+                <Grid container spacing={3} style={{ margin: "0px" }}>
+                  <Grid
+                    item
+                    xs={12}
+                    className={classes.titleBar_onSelect_img_grid_gallery}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<DoneAllIcon style={{ color: "#1ed660" }} />}
+                          size="small"
+                          style={{
+                            background: "transparent",
+                            color: "#636f70",
+                            boxShadow: "none",
+                          }}
+                        >
+                          Select all
+                      </Button>
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={
+                            <DeleteOutlineIcon style={{ color: "#ff3d3d" }} />
+                          }
+                          size="small"
+                          style={{
+                            background: "transparent",
+                            color: "#636f70",
+                            boxShadow: "none",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          Delete
+                      </Button>
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={
+                            <ShareOutlinedIcon style={{ color: "#1ed660" }} />
+                          }
+                          size="small"
+                          style={{
+                            background: "transparent",
+                            color: "#636f70",
+                            boxShadow: "none",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          Share
+                      </Button>
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={
+                            <GamesOutlinedIcon style={{ color: "#1ed660" }} />
+                          }
+                          size="small"
+                          style={{
+                            background: "transparent",
+                            color: "#636f70",
+                            boxShadow: "none",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          Move to
+                      </Button>
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={
+                            <PlaylistAddOutlinedIcon
+                              style={{ color: "#1ed660" }}
+                            />
+                          }
+                          size="small"
+                          style={{
+                            background: "transparent",
+                            color: "#636f70",
+                            boxShadow: "none",
+                            marginLeft: "15px",
+                          }}
+                        >
+                          Add to
+                      </Button>
+                      </div>
+
+                      <div style={{ textAlign: "right" }}>
+                        {selectedImagesLength.length} Selected
+                      <ClearOutlinedIcon
+                          onClick={() => {
+                            setImageStatus(!imageStatus);
+                            props.handleUploadSection(!imageStatus);
+                            setSelectedImagesLength([]);
+                          }}
+                          style={{
+                            color: "#1ed660",
+                            fontSize: "18px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </Grid>
+                </Grid>
+              ) : null}
+
+              {/* dropzone */}
+              <Grid container spacing={3} style={{ margin: "0px" }}>
+                {props.filteredApps &&
+                  props.filteredApps
+                    .slice(
+                      (props.page - 1) * props.itemsPerPage,
+                      (props.page - 1) * props.itemsPerPage + props.itemsPerPage
+                    )
+                    .map((app, i) => (
+                      <Grid
+                        item
+                        lg={3}
+                        md={4}
+                        sm={6}
+                        xs={12}
+                        className={`image_grid_gallery ${classes.image_grid_gallery}`}
+                      >
+                        <div
+                          className={`inner_image_icons ${classes.inner_image_icons}`}
+                        >
+                          {props.isSelect && (
+                            <>
+                              {props.arrSelectedAps.indexOf(app) === -1 && (
+                                <RadioButtonUncheckedIcon className="selection-radio"
+                                  onClick={() => props.onSelection(app)} />
+                              )}
+                              {props.arrSelectedAps.indexOf(app) > -1 && (
+                                <RadioButtonCheckedIcon className="selection-radio"
+                                  onClick={() => props.onSelection(app, true)} />
+                              )}
+                            </>
+                          )}
+                          {!props.isSelect && <SnAppCardActionBtnGrp
+                            app={app}
+                            hash={props.hash}
+                            source="img"
+                            hideTags={true}
+                            hideDelete={props.senderId != null}
+                            hideAdd={props.senderId != null}
+                            onAdd={() => handleSkyspaceAdd(app)}
+                            onEdit={() => props.openSkyApp(app)}
+                            onDelete={() => removeFromSkyspace(app)}
+                            onDownload={() => download(app)}
+                          />
+                          }
+                        </div>
+                        <img
+                          alt={app.title}
+                          src={skylinkToUrl(app.thumbnail)}
+                          style={{
+                            width: "100%",
+                            height: "250px",
+                            border: props.arrSelectedAps.indexOf(app) > -1 ? "2px solid #1ed660" : null,
+                          }}
+                          onClick={() => imageClick(app, i)}
+                          name="1"
+                        />
+                      </Grid>
+
+                    ))
+                }
+              </Grid>
+            </Paper>
+          </Paper>
+        </Grid>
+      </Grid>
+      <SnAddToSkyspaceModal
+        userSession={stUserSession}
+        open={showAddToSkyspace}
+        availableSkyspaces={availableSkyspaces}
+        onClose={() => setShowAddToSkyspace(false)}
+        onSave={saveAddToSkyspaceChanges}
+      />
+    </>
+  );
+
   return (
     <>
       <Grid item xs={12}>
@@ -219,17 +469,17 @@ export default function SnImagesDefault(props) {
                                   {cliTruncate(app.name, 25)}
                                 </Link>
                                 {props.isSelect && (
-                            <>
-                            {props.arrSelectedAps.indexOf(app)===-1 && (
-                              <RadioButtonUncheckedIcon className="selection-radio"
-                              onClick={()=>props.onSelection(app)}/>
-                              )}
-                            {props.arrSelectedAps.indexOf(app)>-1 && (
-                            <RadioButtonCheckedIcon className="selection-radio"
-                            onClick={()=>props.onSelection(app, true)}/>
-                            )}
-                            </>
-                          )}
+                                  <>
+                                    {props.arrSelectedAps.indexOf(app) === -1 && (
+                                      <RadioButtonUncheckedIcon className="selection-radio"
+                                        onClick={() => props.onSelection(app)} />
+                                    )}
+                                    {props.arrSelectedAps.indexOf(app) > -1 && (
+                                      <RadioButtonCheckedIcon className="selection-radio"
+                                        onClick={() => props.onSelection(app, true)} />
+                                    )}
+                                  </>
+                                )}
                               </div>
                               {/* <span className="display-5">
                                 Create Time:{" "}
@@ -269,7 +519,8 @@ export default function SnImagesDefault(props) {
                             hash={props.hash}
                             source="img"
                             hideTags={true}
-                            hideDelete={false}
+                            hideDelete={props.senderId != null}
+                            hideAdd={props.senderId != null}
                             onAdd={() => handleSkyspaceAdd(app)}
                             onEdit={() => props.openSkyApp(app)}
                             onDelete={() => removeFromSkyspace(app)}

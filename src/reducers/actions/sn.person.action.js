@@ -34,6 +34,10 @@ export const fetchBlockstackPerson = (userSession) => {
 export const logoutPerson = (userSession) => {
   BROWSER_STORAGE.clear();
   store.dispatch(setSkyspaceList(null));
+  if (userSession.skydbseed) {
+    window.location.href=window.location.origin;
+    return setPerson(null);
+  }
   return {
     type: ACT_TY_LOGOUT_BLOCKSTACK_USER,
     payload: userSession,

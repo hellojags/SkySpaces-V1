@@ -1,14 +1,18 @@
 import React from "react";
+import "./sn.topbar.css";
 import skyapplogo from "../../SkySpaces_g.png";
 import FormControl from '@material-ui/core/FormControl';
 import skyapplogo_only from "../../SkySpaces_logo_transparent_small.png";
+import AppsIcon from "@material-ui/icons/Apps";
+import SmallLogo from "./images/smLogo.png";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import InputLabel from '@material-ui/core/InputLabel';
+import Link from '@material-ui/core/Link';
 import MuiAlert from "@material-ui/lab/Alert";
 import Select from '@material-ui/core/Select';
 import MenuItem from "@material-ui/core/MenuItem";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, withTheme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -25,7 +29,6 @@ import Search from "@material-ui/icons/Search";
 import MenuIcon from "@material-ui/icons/Menu";
 import { APP_BG_COLOR, DEFAULT_PORTAL, PUBLIC_SHARE_APP_HASH, PUBLIC_SHARE_ROUTE } from "../../sn.constants";
 import { NavLink } from "react-router-dom";
-import { SKYNETHUB_PORTAL } from "../../sn.constants";
 import CloudDownloadOutlinedIcon from "@material-ui/icons/CloudDownloadOutlined";
 import { getAllPublicApps, launchSkyLink, subtractSkapps } from "../../sn.util";
 import { parseSkylink, SkynetClient } from "skynet-js";
@@ -38,11 +41,19 @@ import { connect } from "react-redux";
 import { mapStateToProps, matchDispatcherToProps } from "./sn.topbar.container";
 import { getPublicApps, getSkylinkPublicShareFile } from "../../skynet/sn.api.skynet";
 import SnInfoModal from "../modals/sn.info.modal";
+import { Drawer } from "@material-ui/core";
 
 const drawerWidth = 240;
 const useStyles = (theme) => ({
   root: {
     display: "flex",
+  },
+  headerBgColorSet: {
+    backgroundColor: theme.palette.headerBgColor,
+  },
+  searchBarBg: {
+    backgroundColor: theme.palette.centerBar,
+    // border:"none"
   },
   portalFormControl: {
     marginBottom: 10
@@ -67,6 +78,15 @@ const useStyles = (theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  searchBarForm: {
+    width: "100%",
+    display: "flex"
+  },
+  appLogo: {
+    color: theme.palette.mediumGray,
+    fontSize: 35,
+    marginRight: 20,
+  },
   toolbar: theme.mixins.toolbar,
 });
 
@@ -88,8 +108,22 @@ class SnTopBar extends React.Component {
       publicPortal: DEFAULT_PORTAL,
       showInfoModal: false,
       infoModalContent: "",
+      anchor: "",
+      isTrue: false,
+      activeDarkBck: false,
       onInfoModalClose: () => this.setState({ showInfoModal: false })
     };
+  }
+
+  setActiveDarkBck = (val)=>this.setState({activeDarkBck: val});
+
+  componentDidMount(){
+    let getMode = localStorage.getItem("darkMode");
+    if (getMode === "true") {
+      this.setActiveDarkBck(true);
+    } else {
+      this.setActiveDarkBck(false);
+    }
   }
 
   getSkylinkIdxObject = (evt) => {
@@ -101,6 +135,8 @@ class SnTopBar extends React.Component {
   };
 
   triggerSearch = async (evt) => {
+    console.log("on trigger search");
+
     evt.preventDefault();
     evt.stopPropagation();
     if (this.props.snPublicHash != null) {
@@ -141,6 +177,7 @@ class SnTopBar extends React.Component {
     }
   };
   onDownload = () => {
+    console.log("ondownload");
     try {
       let skylink = parseSkylink(this.state.searchStr)
       //alert("skylink" + skylink)
@@ -162,73 +199,141 @@ class SnTopBar extends React.Component {
     this.props.snPublicHash && evt.preventDefault();
   }
 
-  savePublicSpace = async () => {
-    this.props.setLoaderDisplay(true);
-    const publicHashData = await getPublicApps(this.props.snPublicHash);
-    const skappListToSave = getAllPublicApps(publicHashData.data, this.props.snPublicInMemory.addedSkapps, this.props.snPublicInMemory.deletedSkapps);
-    publicHashData.history[publicHashData.history.length - 1].skylink = this.props.snPublicHash;
-    publicHashData.history.push({
-      creationDate: new Date()
-    });
-    publicHashData.data = skappListToSave;
-    const skylinkListFile = getSkylinkPublicShareFile(this.props.userSession, publicHashData);
-    const portal = document.location.origin.indexOf("localhost") === -1 ? document.location.origin : DEFAULT_PORTAL;
-    const uploadedContent = await new SkynetClient(portal).upload(skylinkListFile);
-    this.props.setLoaderDisplay(false);
-    const newUrl = document.location.href.replace(
-      this.props.snPublicHash,
-      uploadedContent.skylink
-    );
-    this.setState({
-      showInfoModal: true,
-      infoModalContent: newUrl,
-      onInfoModalClose: () => {
-        this.setState({ showInfoModal: false });
-        document.location.href = newUrl;
-      }
-    })
-  }
+  renderChangePortal = (value) => <FormControl className={this.props.classes.portalFormControl}>
+    <Select
+      labelId="demo-simple-select-label"
+      id="pulic-share-portal"
+      value={value}
+      onChange={(evt) => this.changePublicPortal(evt.target.value)}
+    >
+      <MenuItem className="d-none" value={value}>
+        Change Portal
+                        </MenuItem>
+      {document.location.origin.indexOf("localhost") > -1 && (
+        <MenuItem value={document.location.origin}>
+          {document.location.origin}
+        </MenuItem>
+      )}
+      {this.props.snPortalsList &&
+        this.props.snPortalsList.portals.map((obj, index) => (
+          <MenuItem key={index} value={obj.url}>
+            {obj.name}
+          </MenuItem>
+        ))}
+    </Select>
+  </FormControl>
 
   render() {
     const { classes } = this.props;
     return (
       <>
-        <AppBar
-          position="fixed"
-          className={classes.appBar + " topbar-container"}
-          color="inherit"
-        >
-          <Toolbar className={clsx({
-            "d-none": !this.props.snTopbarDisplay,
-          })}>
-            <Grid container spacing={1} alignItems="center">
-              {this.props.snShowDesktopMenu && (
-
-                <Grid item xs={1} sm={2} className="hidden-sm-up center-flex-div-content"
-                >
-                  <MenuIcon onClick={this.props.toggleMobileMenuDisplay} />
-                </Grid>
+        {this.props.snTopbarDisplay && <div>
+          <div className="container-fluid main-container">
+            <nav className={`navbar navbar-light hdr-nvbr-main ${classes.headerBgColorSet}`}>
+              {this.props.person != null && (
+                <Drawer anchor={this.state.anchor} isTrue={this.state.isTrue} setIsTrue={(evt) => this.setState({ isTrue: evt })} />
               )}
-              <Grid item xs={1} sm={2} className="p-top10">
-                <div className="ribbon hidden-xs-dn"><span>BETA</span></div>
-                <NavLink className="sm-up-logo" to="/" onClick={this.handleLogoClick}>
-                  <img
-                    src={skyapplogo}
-                    alt="SkySpaces"
-                    className="cursor-pointer hidden-xs-dn"
-                    height="40"
-                    width="170"
-                  ></img>
-                  <img
-                    src={skyapplogo_only}
-                    alt="SkySpaces"
-                    className="cursor-pointer hidden-sm-up"
-                    height="30"
-                    width="30"
-                  ></img>
-                </NavLink>
-              </Grid>
-              {(this.props.person != null || this.props.snPublicHash) && (
+
+              {/* {this.props.person!=null && <button
+                className="navbar-toggler togl-btn-navbr"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span className="navbar-toggler-icon"></span>
+              </button>} */}
+
+              <a
+                className={`${"navbar-brand"} ${
+                  this.props.person==null ? "auth-navi-brand" : "navi-brnd"
+              } ${this.props.person==null && "logoAlignMent"}`}
+              >
+                {/* logo */}
+                <img
+                  style={{ cursor: "pointer" }}
+                  onClick={this.handleLogoClick}
+                  src="https://skyspaces.io/static/media/SkySpaces_g.531bd028.png"
+                  width="30"
+                  height="30"
+                  className="d-inline-block align-top"
+                  alt=""
+                  loading="lazy"
+                  height="40"
+                  width="170"
+                />
+
+                {/* search input */}
+                {(this.props.person != null || this.props.snPublicHash) && (
+                  <>
+                    <form onSubmit={this.triggerSearch} className={classes.searchBarForm}>
+                      <div className="search_main_div" style={{marginLeft: "auto"}}>
+                        <span>
+                          <i className="fas fa-search srch-icon-inside-field-input"></i>
+                        </span>
+
+                        <input
+                          className={`form-control mr-sm-2 srch_inpt ${classes.searchBarBg}`}
+                          style={{
+                            border: `${
+                              this.state.activeDarkBck === true
+                                ? "none"
+                                : "1px solid lightgray"
+                            }`,
+                          }}
+                          type="search"
+                          placeholder="Search in SkySpaces or download Skylink"
+                          aria-label="Search"
+                          onChange={(evt) =>
+                            this.setState({ searchStr: evt.target.value })
+                          }
+                        />
+                      {/* search inside nav-brand */}
+                      <div className="srch_btn_main_div">
+                        <button className="btn srch_btn_nvbar" type="button" onClick={this.onDownload}>
+                          <label for="hidden-search-inpt">
+                            <i className="fa fa-download icon_download_nvbar"></i>
+                          </label>
+                        </button>
+                        <input type="file" id="hidden-search-inpt" />
+                      </div>
+                      </div>
+
+                    </form>
+                  </>
+                )}
+              </a>
+
+              <a className="small_logo_nvbrnd">
+              {/* small logo */}
+              <img
+                style={{ cursor: "pointer" }}
+                onClick={this.handleLogoClick}
+                src={SmallLogo}
+                width="30"
+                height="30"
+                className=" smallLogo_header"
+                alt=""
+                loading="lazy"
+                height="35"
+                width="35"
+              />
+            </a>
+
+            {this.props.person!=null && (
+              <div className="srch_btn_out_main_div">
+                <button className="btn srch_btn_nvbar">
+                  <label for="hidden-search-inpt">
+                    <i className="fa fa-download icon_download_nvbar"></i>
+                  </label>
+                </button>
+                <input type="file" id="hidden-search-inpt" />
+              </div>
+            )}
+            
+              {/*(this.props.person != null || this.props.snPublicHash) && (
                 <>
                   <Grid item xs={7} sm={7} className="topbar-srch-grid">
                     <div className="float-center">
@@ -254,90 +359,57 @@ class SnTopBar extends React.Component {
                       </form>
                     </div>
                   </Grid>
-                  <Grid item xs={this.props.snPublicHash ? 3 : 1} sm={this.props.snPublicHash ? 2 : 1}>
+                  <Grid item xs={this.props.snPublicHash ? 2 : 1} sm={this.props.snPublicHash ? 2 : 1}>
                     <Tooltip title="Download Skylink Content" arrow>
                       <CloudDownloadOutlinedIcon style={{ color: APP_BG_COLOR, fontSize: 35, cursor: 'pointer' }} onClick={this.onDownload} />
                     </Tooltip>
-                    {this.props.snPublicHash && (
-                      <>
-                        <Button
-                          variant="contained"
-                          onClick={this.savePublicSpace}
-                          color="primary"
-                          className="btn-bg-color hidden-xs-dn"
-                          style={{ marginLeft: 5 }}
-                        >
-                          Save
-                    </Button>
-                        <SaveOutlinedIcon className="hidden-sm-up" style={{ color: APP_BG_COLOR }}
-                          onClick={this.savePublicSpace}
-                        />
-                      </>
-                    )}
                   </Grid>
                 </>
-              )}
+                        )*/}
 
-              <Grid
+              {/* <Grid
                 item
                 sm={this.props.person != null ? 2 : (this.props.snPublicHash != null ? 1 : 10)}
                 className="hidden-xs-dn"
+              > */}
+              <div
+                className="btn-icons-nvbr-div"
+                style={{ display: "flex", alignItems: "center" }}
               >
-                <div className="top-icon-container float-right">
-                  <Tooltip title="Launch SkyApps" arrow>
-                    <IconButton
-                      onClick={() => window.open(SKYNETHUB_PORTAL + "hns/skyapps/")}
-                    >
-                      <AppsOutlinedIcon style={{ color: APP_BG_COLOR }} />
-                    </IconButton>
-                  </Tooltip>
-                  {!this.props.snShowDesktopMenu && (
-
-                    <FormControl className={classes.portalFormControl}>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="pulic-share-portal"
-                        value="Change Portal"
-                        onChange={(evt) => this.changePublicPortal(evt.target.value)}
-                      >
-                        <MenuItem className="d-none" value="Change Portal">
-                          Change Portal
-          </MenuItem>
-                        {document.location.origin.indexOf("localhost") > -1 && (
-                          <MenuItem value={document.location.origin}>
-                            {document.location.origin}
-                          </MenuItem>
-                        )}
-                        {this.props.snPortalsList &&
-                          this.props.snPortalsList.portals.map((obj, index) => (
-                            <MenuItem key={index} value={obj.url}>
-                              {obj.name}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
-                  )}
-                  {this.props.snShowDesktopMenu && (
-                    // TODO: need to create a reducer for signin component display
-                    <SnSignin />
-                  )}
+                <Link justify="center" rel="noopener noreferrer" target="_blank" href="https://blog.sia.tech/own-your-space-eae33a2dbbbc" style={{ color: APP_BG_COLOR }}>Blog</Link>
+                <div className="butn-th-main-div">
+                  <button className="btn th_btn_nvbar">
+                    <AppsIcon
+                      className={this.props.classes.appLogo}
+                    />
+                  </button>
                 </div>
-              </Grid>
-              <Grid
+                {this.props.snPublicHash && (
+                  this.renderChangePortal("Change Portal")
+                )}
+                {this.props.snShowDesktopMenu && this.props.snPublicHash==null && (
+                  // TODO: need to create a reducer for signin component display
+                  <SnSignin />
+                )}
+              </div>
+              {/* </Grid> */}
+              {/* <Grid
                 item
-                xs={this.props.person != null ? 2 : 10}
+                xs={(this.props.person != null || this.props.snPublicHash != null) ? 2 : 10}
                 className="hidden-sm-up"
               >
                 <div className="top-icon-container float-right">
-                  {this.props.snShowDesktopMenu && (
+                  {this.props.snShowDesktopMenu && this.props.snPublicHash==null && (
                     // TODO: need to create a reducer for signin component display
                     <SnSignin />
                   )}
+                  {this.props.snPublicHash && this.renderChangePortal("")}
                 </div>
-              </Grid>
-            </Grid>
-          </Toolbar>
-        </AppBar>
+              </Grid> */}
+            </nav>
+          </div>
+        </div>
+        }
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           open={this.state.invalidSkylink}

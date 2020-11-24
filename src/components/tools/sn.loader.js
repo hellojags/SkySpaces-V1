@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { mapStateToProps } from "./sn.loader.container";
+import "./sn.loader.styles.css";
 
 function SnLoader(props) {
   return (
@@ -14,4 +15,4 @@ function SnLoader(props) {
   );
 }
 
-export default  connect(mapStateToProps)(SnLoader);
+export default connect(mapStateToProps)(SnLoader);

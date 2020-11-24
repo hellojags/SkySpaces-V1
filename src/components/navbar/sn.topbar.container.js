@@ -10,6 +10,7 @@ import { toggleDesktopMenuDisplay } from "../../reducers/actions/sn.desktop-menu
 import { fetchPublicApps, setApps } from "../../reducers/actions/sn.apps.action";
 import {setUserSession } from "../../reducers/actions/sn.user-session.action"
 import { fetchAppsSuccess } from "../../reducers/actions/sn.apps.action";
+import { setImportedSpace } from "../../reducers/actions/sn.imported-space.action";
 
 export function matchDispatcherToProps(dispatcher){
     return bindActionCreators({ 
@@ -24,7 +25,8 @@ export function matchDispatcherToProps(dispatcher){
         fetchPublicApps,
         setLoaderDisplay,
         fetchAppsSuccess,
-        setApps
+        setApps,
+        setImportedSpace
     }, dispatcher);
 }
 

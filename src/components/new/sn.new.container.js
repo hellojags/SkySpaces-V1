@@ -9,6 +9,7 @@ import {
 import { setAppSkyspces } from "../../reducers/actions/sn.app-skyspacelist.action";
 import { setInfoModalState } from "../../reducers/actions/sn.info.modal.action";
 import { fetchSkyspaceAppCount } from "../../reducers/actions/sn.skyspace-app-count.action";
+import { setAppDetail } from "../../reducers/actions/sn.app-detail.action";
 
 export function matchDispatcherToProps(dispatcher) {
   return bindActionCreators(
@@ -20,7 +21,8 @@ export function matchDispatcherToProps(dispatcher) {
       createSkapp,
       setInfoModalState,
       setAppSkyspces,
-      fetchSkyspaceAppCount
+      fetchSkyspaceAppCount,
+      setAppDetail
     },
     dispatcher
   );

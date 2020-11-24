@@ -40,7 +40,6 @@ class SnAddSkyspaceModal extends React.Component {
   };
 
   componentDidUpdate() {
-    console.log("skyspace modal component did update");
     if (
       this.props.type === RENAME_SKYSPACE &&
       this.state.skyspaceName == null

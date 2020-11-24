@@ -44,6 +44,13 @@ export const fetchAppDetailSuccess = (args) => {
   };
 };
 
+export const setAppDetail = (args) => {
+  return {
+    type: ACT_TY_FETCH_APP_DETAIL_SUCCESS,
+    payload: args,
+  };
+}
+
 export const createSkapp = (skappObj) => {
   store.dispatch(setLoaderDisplay(true));
   console.log("create skapp action called");

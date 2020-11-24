@@ -32,6 +32,7 @@ export function mapStateToProps(state) {
     userSession: state.userSession,
     skyspaceList: state.snSkyspaceList,
     person: state.person,
-    snSkyspaceAppCount: state.snSkyspaceAppCount
+    snSkyspaceAppCount: state.snSkyspaceAppCount,
+    snImportedSpace: state.snImportedSpace
   };
 }

@@ -1,0 +1,10 @@
+.audio-player-wrapper {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: calc(100% - 295px);
+}
+
+.audio_card.active {
+  background-color: rgba(20, 25, 100, 0.25);
+}

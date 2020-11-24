@@ -11,6 +11,7 @@ import PermDeviceInformationOutlinedIcon from "@material-ui/icons/PermDeviceInfo
 import BusinessCenterOutlinedIcon from "@material-ui/icons/BusinessCenterOutlined";
 import SnImages from "./components/categories/images/sn.images";
 import SnVideo from "./components/categories/video/sn.video";
+import SnAudio from "./components/categories/audio/sn.audio";
 
 export const CATEGORY_OBJ = {
   all: {
@@ -19,81 +20,98 @@ export const CATEGORY_OBJ = {
   },
   video: {
     fileTypeList: ["video/x-msvideo", "video/mpeg", "video/ogg", "video/webm", "video/3gpp", "video/3gpp2",
-  "video/mp4"],
-    getLogo: () => <FontAwesomeIcon icon="video"></FontAwesomeIcon>,
+      "video/mp4"],
+    getLogo: (className) => <FontAwesomeIcon icon="video" className={className ? className : ""}></FontAwesomeIcon>,
     heading: "Videos",
-    cards: (page, filteredApps, skyspace, itemsPerPage, openSkyApp, onSelection, isSelect, arrSelectedAps, hash, funcOnDelete) => (
-        <SnVideo
-          filteredApps={filteredApps}
-          page={page}
-          skyspace={skyspace}
-          itemsPerPage={itemsPerPage}
-          openSkyApp={openSkyApp}
-          onDelete={funcOnDelete}
-          onSelection={onSelection}
-          isSelect={isSelect}
-          arrSelectedAps={arrSelectedAps}
-          hash={hash}
-        />
-      )
+    cards: (page, filteredApps, skyspace, itemsPerPage, openSkyApp, onSelection, isSelect, arrSelectedAps, hash, funcOnDelete, senderId) => (
+      <SnVideo
+        filteredApps={filteredApps}
+        page={page}
+        skyspace={skyspace}
+        itemsPerPage={itemsPerPage}
+        openSkyApp={openSkyApp}
+        onDelete={funcOnDelete}
+        onSelection={onSelection}
+        isSelect={isSelect}
+        arrSelectedAps={arrSelectedAps}
+        hash={hash}
+        senderId={senderId}
+      />
+    )
   },
   pictures: {
     fileTypeList: ["image/bmp", "image/gif", "image/x-icon", "image/jpeg", "image/png", "image/svg+xml",
-  "image/tiff"],
-    getLogo: () => <CameraAltOutlinedIcon />,
+      "image/tiff"],
+    getLogo: (className) => <CameraAltOutlinedIcon className={className ? className : ""} />,
     heading: "Images",
-    cards: (page, filteredApps, skyspace, itemsPerPage, openSkyApp, onSelection, isSelect, arrSelectedAps, hash, funcOnDelete) => (
-        <SnImages
-          filteredApps={filteredApps}
-          page={page}
-          skyspace={skyspace}
-          itemsPerPage={itemsPerPage}
-          openSkyApp={openSkyApp}
-          onDelete={funcOnDelete}
-          onSelection={onSelection}
-          isSelect={isSelect}
-          arrSelectedAps={arrSelectedAps}
-          hash={hash}
-        />
-      )
+    cards: (page, filteredApps, skyspace, itemsPerPage, openSkyApp, onSelection, isSelect, arrSelectedAps, hash, funcOnDelete, senderId) => (
+      <SnImages
+        filteredApps={filteredApps}
+        page={page}
+        skyspace={skyspace}
+        itemsPerPage={itemsPerPage}
+        openSkyApp={openSkyApp}
+        onDelete={funcOnDelete}
+        onSelection={onSelection}
+        isSelect={isSelect}
+        arrSelectedAps={arrSelectedAps}
+        hash={hash}
+        senderId={senderId}
+      />
+    )
   },
   audio: {
     fileTypeList: ["audio/aac", "audio/mpeg"],
-    getLogo: () => <FontAwesomeIcon icon="headphones"></FontAwesomeIcon>,
+    getLogo: (className) => <FontAwesomeIcon icon="headphones" className={className ? className : ""}></FontAwesomeIcon>,
     heading: "Audio",
+    cards: (page, filteredApps, skyspace, itemsPerPage, openSkyApp, onSelection, isSelect, arrSelectedAps, hash, funcOnDelete, senderId) => (
+      <SnAudio
+        filteredApps={filteredApps}
+        page={page}
+        skyspace={skyspace}
+        itemsPerPage={itemsPerPage}
+        openSkyApp={openSkyApp}
+        onDelete={funcOnDelete}
+        onSelection={onSelection}
+        isSelect={isSelect}
+        arrSelectedAps={arrSelectedAps}
+        hash={hash}
+        senderId={senderId}
+      />
+    )
   },
   documents: {
     fileTypeList: ["application/x-abiword", "application/x-freearc", "application/vnd.amazon.ebook", "application/msword",
-    "text/html", "text/plain", "application/pdf"],
-    getLogo: () => <DescriptionOutlinedIcon />,
+      "text/html", "text/plain", "application/pdf"],
+    getLogo: (className) => <DescriptionOutlinedIcon className={className ? className : ""} />,
     heading: "Documents",
   },
   games: {
-    getLogo: () => <SportsEsportsOutlinedIcon />,
+    getLogo: (className) => <SportsEsportsOutlinedIcon className={className ? className : ""} />,
     heading: "Games",
   },
   blog: {
-    getLogo: () => <FontAwesomeIcon icon="blog"></FontAwesomeIcon>,
+    getLogo: (className) => <FontAwesomeIcon icon="blog" className={className ? className : ""}></FontAwesomeIcon>,
     heading: "Blogs",
   },
   utilities: {
-    getLogo: () => <BusinessCenterOutlinedIcon />,
+    getLogo: (className) => <BusinessCenterOutlinedIcon className={className ? className : ""} />,
     heading: "Utilities",
   },
   software: {
-    getLogo: () => <CasinoOutlinedIcon />,
+    getLogo: (className) => <CasinoOutlinedIcon className={className ? className : ""} />,
     heading: "Software",
   },
   livestream: {
-    getLogo: () => <LiveTvOutlinedIcon />,
+    getLogo: (className) => <LiveTvOutlinedIcon className={className ? className : ""} />,
     heading: "LiveStream",
   },
   books: {
-    getLogo: () => <MenuBookTwoToneIcon />,
+    getLogo: (className) => <MenuBookTwoToneIcon className={className ? className : ""} />,
     heading: "Books",
   },
   data: {
-    getLogo: () => <PermDeviceInformationOutlinedIcon />,
+    getLogo: (className) => <PermDeviceInformationOutlinedIcon className={className ? className : ""} />,
     heading: "Data",
   },
 };

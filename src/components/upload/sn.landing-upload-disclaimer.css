@@ -1,0 +1,12 @@
+.icon-c2-main-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+  }
+  .desc-c2-div {
+    padding-top: 20px;
+    color: lightgray;
+    text-align: center;
+  }
+  
