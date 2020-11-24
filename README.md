@@ -1,6 +1,53 @@
 # For latest update related to Hackathoan refer branch v2.0
 https://github.com/skynethubio/SkySpaces/blob/feature/v2.0/README.md
 
+# SkySpaces [Hackathon Notes]
+
+1. SkySpaces landing page - https://siasky.net/AAAJohsrhWTRSogCr0GQJOXbprCTYpEBJj6597OJ8H7mpg
+
+2. File Sharing Between Skynet users using Public Key -  https://siasky.net/AAAY2ye7q2VdG229IbGCyF7GA89_JE0u7FknInydEvdkbQ
+
+3. SkySpaces New UX
+
+* Static UI - HTML/CSS demo(Light/Dark) - https://siasky.net/AAAxUx7oMl8ZuL-bKOeljbvqU8SdlfMyUWYUeJy8ErsYzg
+
+* WebApp/React Implementation(WIP) - https://siasky.net/_AFCeMD_zrRl0kGYNnksguliCMpTK6OJexaSFvJ1Qf-CSw
+
+
+## SkySpaces Hackathon Focus Areas
+
+(1) Skapp - 100% goal acheived 
+- SkySpaces Integration with SkyDB. SkySpaces functionality needs Skynet, SkyDB, HNS name and Browser only :)
+
+(2) Professional UI - 90% goal acheived, 10% work will be conmpleted in next 2 days 
+
+(3) Cost effective SkyDB usage - 100% goal acheived. 
+- This is new feature and is working on local and will be released with next update in next two days
+
+(4) All Kind of File(Space) Sharing
+- Public Space/File sharing (Working)
+- File Sharing between Users using public key (need to enable encryption) - please check demo above  
+- Password protected file sharing (WIP) 
+- 80% goal acheived
+
+(5) "User Discovery" page, "follower and following" page - 50% goal acheived (It will be released post Beta release, should be quick as foundation components are in place)
+- UX 100% completed
+- design completed
+- implemntation in progress
+
+(6) Somthing intresting cooking in my head for few months (since Skynet announcement). Once #1 to 5 is done, I will have more updates on it.
+
+ **** Target timeline for #1 to #5 public release by mid Dec 2020 . #6 in First week of Feb 2021 ****
+
+If you like the project, please follow(star) it. also connect with me in Sia discord (crypto_rocket) for discussion/collaboration.  
+
+NOTE:
+1. Code is not deployed on HNS domain yet. It will be done on 25th Nov. You can always run this branch locally and test.
+
+**** I would not recommend storing or sharing any sensitive information using SkySpaces yet.I know couple of bugs I need to fix in next two days. post beta release I will need to cleanup code and then I will atleast get two external devs to review my code for security :) *****
+
+
+------------------ END of Hackathon Update related to this repository. Please check other repository for different category submission ------------
 
 # Introducing "SkySpaces"
 
