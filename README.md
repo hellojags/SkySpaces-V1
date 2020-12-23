@@ -1,6 +1,13 @@
 # For latest update related to Hackathoan refer branch v2.0
 https://github.com/skynethubio/SkySpaces/blob/feature/v2.0/README.md
 
+
+Website: https://skyspace.hns.siasky.net
+
+DEMO: https://siasky.net/AAA8XilOlyQzp19SePdG8lHuxvPCH_JH8JOtKjHUVwSu0g
+
+
+
 # SkySpaces [Hackathon Notes]
 
 1. SkySpaces landing page - https://siasky.net/AAAJohsrhWTRSogCr0GQJOXbprCTYpEBJj6597OJ8H7mpg
