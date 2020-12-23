@@ -1,3 +1,7 @@
+Website: https://skyspace.hns.siasky.net
+
+DEMO: https://siasky.net/AAA8XilOlyQzp19SePdG8lHuxvPCH_JH8JOtKjHUVwSu0g
+
 # SkySpaces [Hackathon Notes]
 
 1. SkySpaces landing page - https://siasky.net/AAAJohsrhWTRSogCr0GQJOXbprCTYpEBJj6597OJ8H7mpg
@@ -46,10 +50,6 @@ NOTE:
 
 # Introducing "SkySpaces"
 
-https://skyspaces.io [latest code]
-
-Access on Skynet: https://siasky.net/hns/skyhub/ [Codebase gets updated on weekly basis]
-
 SkySpaces is a place where user can create digital Spaces to store and manage Skynet content. 
 Skynet content search and discovery can be done using categories, custom tags and metadata. Soon you will be able to share Skynet Spaces with your friends and families like picture galleries, video albums..etc.
 
@@ -66,9 +66,7 @@ SkySpaces v0.1.0-Alpha : MVP Features
 
 ## Video Demo 
 
-### SkySpaces Feature Demo: https://skynethub.io/AABdoeACo5KQzrgla89QILeTQjuSachXjEZNhhoUe5844A
-
-### Public Sharing Demo: https://skynethub.io/AACx94zAz2W_u0dGJCJ4Qc6-4kJFtX6PJrkIZJkktkntNg
+DEMO: https://siasky.net/AAA8XilOlyQzp19SePdG8lHuxvPCH_JH8JOtKjHUVwSu0g
 
 ## Features:
 
